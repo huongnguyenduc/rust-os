@@ -13,6 +13,18 @@ pub extern "C" fn _start() -> ! {
 
     rust_os::init(); // new
 
+    fn stack_overflow() {
+        stack_overflow(); // for each recursion, the return address is pushed
+    }
+
+    // trigger a stack overflow
+    stack_overflow();
+
+    // trigger a page fault
+    unsafe {
+        *(0xdeadbeef as *mut u8) = 42;
+    };
+
     // invoke a breakpoint exception
     x86_64::instructions::interrupts::int3(); // new
 
